@@ -1,6 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel, { User } from "@/model/User.model";
-import bcrypt from "bcryptjs";
 import { sendVerificationMail } from "@/helpers/sendVerificationMail";
 import { encryptPassword } from "@/helpers/encryptPassword";
 
@@ -119,7 +118,7 @@ async function createNewUser(
   email: string,
   verificationCode: string
 ) {
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await encryptPassword(password);
   const expiryDate = new Date();
   expiryDate.setHours(expiryDate.getHours() + 1);
 
