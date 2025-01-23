@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel, { User } from "@/model/User.model";
 import bcrypt from "bcryptjs";
 import { sendVerificationMail } from "@/helpers/sendVerificationMail";
+import { encryptPassword } from "@/helpers/encryptPassword";
 
 // Responses Start
 
@@ -105,8 +106,8 @@ async function updateExistingUser(
   password: string,
   verificationCode: string
 ) {
-  const hashedPassword = await bcrypt.hash(password, 10);
-  existingUserByEmail.password = hashedPassword;
+  const hashedPassword = encryptPassword(password);
+  existingUserByEmail.password = await hashedPassword;
   existingUserByEmail.verifyCode = verificationCode;
   existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 3600);
   await existingUserByEmail.save();
